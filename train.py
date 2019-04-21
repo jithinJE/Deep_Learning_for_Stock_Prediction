@@ -16,10 +16,26 @@ import pandas as pd
 import gc
 
 def plot_results_multiple(predicted_data, true_data, prediction_len, fig_path=None):
+    
     fig, axs = plt.subplots(len(predicted_data), 1, sharex=True)
+    #plt.subplots_adjust(top=1.3)
+    plt.tight_layout()
+    
     if (len(predicted_data) > 1):
         for x in range(len(predicted_data)):
             axs[x].plot(true_data[x], label='True Data')
+            
+            '''
+            minY = min ([ min(week) for week in predicted_data[x][0] ])
+            minY = min ( min(true_data[x]), minY)
+            
+            maxY = max ([ max(week) for week in predicted_data[x][0] ])
+            maxY = max( max(true_data[x]), maxY)
+            
+            #axs[x].set_ylim( minY-20 , maxY+20 )
+            axs[x].set_ylim( min(true_data[x]) - 100 , max(true_data[x]) + 100 )
+            '''
+                    
             # Pad the list of predictions to shift it in the graph to it's correct start
             for i, data in enumerate(predicted_data[x][0]):
                 padding = [None for p in range(i * prediction_len)]
@@ -27,6 +43,11 @@ def plot_results_multiple(predicted_data, true_data, prediction_len, fig_path=No
             axs[x].set_title(predicted_data[x][1])
     else:
         axs.plot(true_data, label='True Data')
+        
+        '''
+        axs.set_ylim(  min(true_data)-100 , max(true_data)+100  )
+        '''
+        
         for i, data in enumerate(predicted_data[0][0]):
             padding = [None for p in range(i * prediction_len)]
             axs.plot(padding + data, label='Prediction')
